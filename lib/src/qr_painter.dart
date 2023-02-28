@@ -199,6 +199,7 @@ class QrPainter extends CustomPainter {
 
     double left;
     double top;
+    final pixelSize = paintMetrics.pixelSize;
     final gap = !gapless ? _gapSize : 0;
     // get the painters for the pixel information
     final pixelPaint = _paintCache.firstPaint(QrCodeElement.codePixel);
@@ -219,8 +220,8 @@ class QrPainter extends CustomPainter {
         final paint = _qrImage.isDark(y, x) ? pixelPaint : emptyPixelPaint;
         if (paint == null) continue;
         // paint a pixel
-        left = paintMetrics.inset + (x * (paintMetrics.pixelSize + gap));
-        top = paintMetrics.inset + (y * (paintMetrics.pixelSize + gap));
+        left = paintMetrics.inset + (x * (pixelSize + gap));
+        top = paintMetrics.inset + (y * (pixelSize + gap));
         var pixelHTweak = 0.0;
         var pixelVTweak = 0.0;
         if (gapless && _hasAdjacentHorizontalPixel(x, y, _qr!.moduleCount)) {
@@ -229,7 +230,10 @@ class QrPainter extends CustomPainter {
         if (gapless && _hasAdjacentVerticalPixel(x, y, _qr!.moduleCount)) {
           pixelVTweak = 0.5;
         }
-        final pixelSize = paintMetrics.pixelSize;
+
+        final connectedCircles = <Offset>[];
+        final unconnectedCoords = <Offset>[];
+
         //square shape
         final squareRect = Rect.fromLTWH(
           left,
@@ -256,29 +260,57 @@ class QrPainter extends CustomPainter {
           //draw random Circles
           final randomRadius = Random().nextDouble() * 0.5 + 0.3;
           final circleRect = Rect.fromLTWH(
-            left +
-                (paintMetrics.pixelSize -
-                        paintMetrics.pixelSize * randomRadius) /
-                    2,
-            top +
-                (paintMetrics.pixelSize -
-                        paintMetrics.pixelSize * randomRadius) /
-                    2,
-            paintMetrics.pixelSize * randomRadius,
-            paintMetrics.pixelSize * randomRadius,
+            left + (pixelSize - pixelSize * randomRadius) / 2,
+            top + (pixelSize - pixelSize * randomRadius) / 2,
+            pixelSize * randomRadius,
+            pixelSize * randomRadius,
           );
           canvas.drawOval(circleRect, paint);
         } else if (dataModuleStyle.dataModuleShape ==
             QrDataModuleShape.bubbles) {
-          final radius = Radius.circular(paintMetrics.pixelSize + pixelHTweak);
-          final strokeWidth = paintMetrics.pixelSize / 4;
+          final radius = Radius.circular(pixelSize + pixelHTweak);
+          final strokeWidth = pixelSize / 4;
           final strokePaint = paint
-            ..color = paint.color
             ..strokeWidth = strokeWidth
             ..style = PaintingStyle.stroke;
           final strokeRect = squareRect.deflate(strokeWidth / 2);
           final strokeRRect = RRect.fromRectAndRadius(strokeRect, radius);
           canvas.drawRRect(strokeRRect, strokePaint);
+        } else if (dataModuleStyle.dataModuleShape ==
+                QrDataModuleShape.random &&
+            Random().nextInt(10) < 5) {
+          Rect? _prevCircleRect;
+          // draw random Circles
+          final randomRadius = Random().nextDouble() * 0.5 + 0.3;
+          final circleRect = Rect.fromLTWH(
+            left + (pixelSize - pixelSize * randomRadius) / 2,
+            top + (pixelSize - pixelSize * randomRadius) / 2,
+            pixelSize * randomRadius,
+            pixelSize * randomRadius,
+          );
+
+          // connect circles with lines
+          final connectChance = Random().nextInt(2);
+          final isConnect = connectChance == 0;
+          if (isConnect) {
+            // connect this circle with previous circle
+            if (_prevCircleRect != null) {
+              final startPoint = Offset(
+                _prevCircleRect.center.dx + _prevCircleRect.width / 2,
+                _prevCircleRect.center.dy,
+              );
+              final endPoint = Offset(
+                circleRect.center.dx - circleRect.width / 2,
+                circleRect.center.dy,
+              );
+              canvas.drawLine(startPoint, endPoint, paint);
+            }
+            _prevCircleRect = circleRect;
+          } else {
+            _prevCircleRect = null;
+          }
+
+          canvas.drawOval(circleRect, paint);
         } else {
           final roundedRect = RRect.fromRectAndRadius(
               squareRect, Radius.circular(pixelSize + pixelHTweak));
@@ -383,6 +415,12 @@ class QrPainter extends CustomPainter {
       canvas.drawRect(outerRect, outerPaint);
       canvas.drawRect(innerRect, innerPaint);
       canvas.drawRect(dotRect, dotPaint);
+    } else if (eyeStyle.eyeShape == QrEyeShape.roundedOuterSquare) {
+      final outerRRect =
+          RRect.fromRectAndRadius(outerRect, Radius.circular(10.0));
+      canvas.drawRRect(outerRRect, outerPaint);
+      canvas.drawRect(innerRect, innerPaint);
+      canvas.drawRect(dotRect, dotPaint);
     } else {
       final roundedOuterStrokeRect =
           RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
@@ -468,8 +506,6 @@ class QrPainter extends CustomPainter {
     return image.toByteData(format: format);
   }
 }
-
-void drawRandomSizeCircleDots(Canvas canvas) {}
 
 class _PaintMetrics {
   _PaintMetrics(
