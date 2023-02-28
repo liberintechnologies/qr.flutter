@@ -18,8 +18,8 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
-  QrDataModuleShape shape = QrDataModuleShape.square;
+  QrDataModuleShape dataShape = QrDataModuleShape.square;
+  QrEyeShape eyeShape = QrEyeShape.square;
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +39,12 @@ class _MainScreenState extends State<MainScreen> {
           painter: QrPainter(
             data: message,
             version: QrVersions.auto,
-            eyeStyle: const QrEyeStyle(
-              eyeShape: QrEyeShape.square,
+            eyeStyle: QrEyeStyle(
+              eyeShape: eyeShape,
               color: Color(0xff128760),
             ),
-            dataModuleStyle:  QrDataModuleStyle(
-              dataModuleShape: shape,
+            dataModuleStyle: QrDataModuleStyle(
+              dataModuleShape: dataShape,
               color: Colors.brown,
             ),
             // size: 320.0,
@@ -74,80 +74,179 @@ class _MainScreenState extends State<MainScreen> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)
-                    .copyWith(bottom: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          shape = QrDataModuleShape.circle;
-                        });
-                      },
-                      child: Container(
-                        height: 30, width: 30, color: Colors.blue,
-                        child: Center(child: Text("C")),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)
+                      .copyWith(bottom: 40),
+                  child: Column(
+                    children: [
+                      //for eye pattern
+                      Container(
+                        height: 35,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                             Center(child: Text('Eye Pattern')),
+                             SizedBox(width: 10,),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  eyeShape = QrEyeShape.circle;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Circle"),
+                                )),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  eyeShape = QrEyeShape.roundedOuterSquare;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Outer Rounded"),
+                                )),
+                              ),
+                            ),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  eyeShape = QrEyeShape.square;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(
+                                    child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Reset"),
+                                )),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                       InkWell(
-                      onTap: () {
-                        setState(() {
-                          shape = QrDataModuleShape.bubbles;
-                        });
-                      },
-                      child: Container(
-                        height: 30, width: 30, color: Colors.blue,
-                        child: Center(child: Text("B")),
+                      SizedBox(
+                        height: 10,
                       ),
-                    ),
-                       InkWell(
-                      onTap: () {
-                        setState(() {
-                          shape = QrDataModuleShape.randomCircle;
-                        });
-                      },
-                      child: Container(
-                        height: 30, width: 30, color: Colors.blue,
-                        child: Center(child: Text("Rc")),
+                      //for data patterns
+                      Container(
+                        height: 35,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                              Center(child: Text('Data Pattern')),
+                             SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  dataShape = QrDataModuleShape.circle;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Circle"),
+                                )),
+                              ),
+                            ),
+                             SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  dataShape = QrDataModuleShape.bubbles;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Bubble"),
+                                )),
+                              ),
+                            ),
+                             SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  dataShape = QrDataModuleShape.randomCircle;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Random circle"),
+                                )),
+                              ),
+                            ),
+                             SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  dataShape = QrDataModuleShape.diamond;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Diamond"),
+                                )),
+                              ),
+                            ),
+                             SizedBox(width: 10),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  dataShape = QrDataModuleShape.square;
+                                });
+                              },
+                              child: Container(
+                                color: Colors.blue,
+                                child: Center(child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Square"),
+                                )),
+                              ),
+                            ),
+                             SizedBox(width: 10),
+                             //todo for testing
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  dataShape = QrDataModuleShape.random;
+                                });
+                              },
+                              child: Container(
+                                
+                                color: Colors.red,
+                                child: Center(child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text("Reset"),
+                                )),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                      InkWell(
-                      onTap: () {
-                        setState(() {
-                          shape = QrDataModuleShape.diamond;
-                        });
-                      },
-                      child: Container(
-                        height: 30, width: 30, color: Colors.blue,
-                        child: Center(child: Text("D")),
-                      ),
-                    ),
-                      InkWell(
-                      onTap: () {
-                        setState(() {
-                          shape = QrDataModuleShape.square;
-                        });
-                      },
-                      child: Container(
-                        height: 30, width: 30, color: Colors.blue,
-                        child: Center(child: Text("S")),
-                      ),
-                    ),
-                     InkWell(
-                      onTap: () {
-                        setState(() {
-                          shape = QrDataModuleShape.random;
-                        });
-                      },
-                      child: Container(
-                        height: 30, width: 30, color: Colors.red,
-                        child: Center(child: Text("Rn")),
-                      ),
-                    ),
-                  ],
-                )
-              ),
+                    ],
+                  )),
             ],
           ),
         ),
