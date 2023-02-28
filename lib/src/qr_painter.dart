@@ -5,6 +5,7 @@
  */
 
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
@@ -228,17 +229,59 @@ class QrPainter extends CustomPainter {
         if (gapless && _hasAdjacentVerticalPixel(x, y, _qr!.moduleCount)) {
           pixelVTweak = 0.5;
         }
+        final pixelSize = paintMetrics.pixelSize;
+        //square shape
         final squareRect = Rect.fromLTWH(
           left,
           top,
-          paintMetrics.pixelSize + pixelHTweak,
-          paintMetrics.pixelSize + pixelVTweak,
+          pixelSize + pixelHTweak,
+          pixelSize + pixelVTweak,
         );
+        //diamond shape
+        final diamondPath = Path();
+        diamondPath.moveTo(left + pixelSize / 2.0, top);
+        diamondPath.lineTo(left + pixelSize, top + pixelSize / 2.0);
+        diamondPath.lineTo(left + pixelSize / 2.0, top + pixelSize);
+        diamondPath.lineTo(left, top + pixelSize / 2.0);
+        diamondPath.close();
+
         if (dataModuleStyle.dataModuleShape == QrDataModuleShape.square) {
           canvas.drawRect(squareRect, paint);
+        } else if (dataModuleStyle.dataModuleShape ==
+            QrDataModuleShape.diamond) {
+          canvas.drawPath(diamondPath, paint);
+          // ignore: lines_longer_than_80_chars
+        } else if (dataModuleStyle.dataModuleShape ==
+            QrDataModuleShape.randomCircle) {
+          //draw random Circles
+          final randomRadius = Random().nextDouble() * 0.5 + 0.3;
+          final circleRect = Rect.fromLTWH(
+            left +
+                (paintMetrics.pixelSize -
+                        paintMetrics.pixelSize * randomRadius) /
+                    2,
+            top +
+                (paintMetrics.pixelSize -
+                        paintMetrics.pixelSize * randomRadius) /
+                    2,
+            paintMetrics.pixelSize * randomRadius,
+            paintMetrics.pixelSize * randomRadius,
+          );
+          canvas.drawOval(circleRect, paint);
+        } else if (dataModuleStyle.dataModuleShape ==
+            QrDataModuleShape.bubbles) {
+          final radius = Radius.circular(paintMetrics.pixelSize + pixelHTweak);
+          final strokeWidth = paintMetrics.pixelSize / 4;
+          final strokePaint = paint
+            ..color = paint.color
+            ..strokeWidth = strokeWidth
+            ..style = PaintingStyle.stroke;
+          final strokeRect = squareRect.deflate(strokeWidth / 2);
+          final strokeRRect = RRect.fromRectAndRadius(strokeRect, radius);
+          canvas.drawRRect(strokeRRect, strokePaint);
         } else {
-          final roundedRect = RRect.fromRectAndRadius(squareRect,
-              Radius.circular(paintMetrics.pixelSize + pixelHTweak));
+          final roundedRect = RRect.fromRectAndRadius(
+              squareRect, Radius.circular(pixelSize + pixelHTweak));
           canvas.drawRRect(roundedRect, paint);
         }
       }
@@ -425,6 +468,8 @@ class QrPainter extends CustomPainter {
     return image.toByteData(format: format);
   }
 }
+
+void drawRandomSizeCircleDots(Canvas canvas) {}
 
 class _PaintMetrics {
   _PaintMetrics(
