@@ -18,6 +18,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+
+  QrDataModuleShape shape = QrDataModuleShape.square;
+
   @override
   Widget build(BuildContext context) {
     final message =
@@ -40,8 +43,8 @@ class _MainScreenState extends State<MainScreen> {
               eyeShape: QrEyeShape.square,
               color: Color(0xff128760),
             ),
-            dataModuleStyle: const QrDataModuleStyle(
-              dataModuleShape: QrDataModuleShape.randomCircle,
+            dataModuleStyle:  QrDataModuleStyle(
+              dataModuleShape: shape,
               color: Colors.brown,
             ),
             // size: 320.0,
@@ -73,7 +76,77 @@ class _MainScreenState extends State<MainScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40)
                     .copyWith(bottom: 40),
-                child: Text(message),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          shape = QrDataModuleShape.circle;
+                        });
+                      },
+                      child: Container(
+                        height: 30, width: 30, color: Colors.blue,
+                        child: Center(child: Text("C")),
+                      ),
+                    ),
+                       InkWell(
+                      onTap: () {
+                        setState(() {
+                          shape = QrDataModuleShape.bubbles;
+                        });
+                      },
+                      child: Container(
+                        height: 30, width: 30, color: Colors.blue,
+                        child: Center(child: Text("B")),
+                      ),
+                    ),
+                       InkWell(
+                      onTap: () {
+                        setState(() {
+                          shape = QrDataModuleShape.randomCircle;
+                        });
+                      },
+                      child: Container(
+                        height: 30, width: 30, color: Colors.blue,
+                        child: Center(child: Text("Rc")),
+                      ),
+                    ),
+                      InkWell(
+                      onTap: () {
+                        setState(() {
+                          shape = QrDataModuleShape.diamond;
+                        });
+                      },
+                      child: Container(
+                        height: 30, width: 30, color: Colors.blue,
+                        child: Center(child: Text("D")),
+                      ),
+                    ),
+                      InkWell(
+                      onTap: () {
+                        setState(() {
+                          shape = QrDataModuleShape.square;
+                        });
+                      },
+                      child: Container(
+                        height: 30, width: 30, color: Colors.blue,
+                        child: Center(child: Text("S")),
+                      ),
+                    ),
+                     InkWell(
+                      onTap: () {
+                        setState(() {
+                          shape = QrDataModuleShape.random;
+                        });
+                      },
+                      child: Container(
+                        height: 30, width: 30, color: Colors.red,
+                        child: Center(child: Text("Rn")),
+                      ),
+                    ),
+                  ],
+                )
               ),
             ],
           ),
