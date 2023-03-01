@@ -169,21 +169,6 @@ class _MainScreenState extends State<MainScreen> {
                             InkWell(
                               onTap: () {
                                 setState(() {
-                                  dataShape = QrDataModuleShape.bubbles;
-                                });
-                              },
-                              child: Container(
-                                color: Colors.blue,
-                                child: Center(child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Bubble"),
-                                )),
-                              ),
-                            ),
-                             SizedBox(width: 10),
-                            InkWell(
-                              onTap: () {
-                                setState(() {
                                   dataShape = QrDataModuleShape.randomCircle;
                                 });
                               },
@@ -225,23 +210,7 @@ class _MainScreenState extends State<MainScreen> {
                                 )),
                               ),
                             ),
-                             SizedBox(width: 10),
-                             //todo for testing
-                            InkWell(
-                              onTap: () {
-                                setState(() {
-                                  dataShape = QrDataModuleShape.random;
-                                });
-                              },
-                              child: Container(
-                                
-                                color: Colors.red,
-                                child: Center(child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text("Reset"),
-                                )),
-                              ),
-                            ),
+                            
                           ],
                         ),
                       ),

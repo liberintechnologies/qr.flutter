@@ -266,52 +266,7 @@ class QrPainter extends CustomPainter {
             pixelSize * randomRadius,
           );
           canvas.drawOval(circleRect, paint);
-        } else if (dataModuleStyle.dataModuleShape ==
-            QrDataModuleShape.bubbles) {
-          final radius = Radius.circular(pixelSize + pixelHTweak);
-          final strokeWidth = pixelSize / 4;
-          final strokePaint = paint
-            ..strokeWidth = strokeWidth
-            ..style = PaintingStyle.stroke;
-          final strokeRect = squareRect.deflate(strokeWidth / 2);
-          final strokeRRect = RRect.fromRectAndRadius(strokeRect, radius);
-          canvas.drawRRect(strokeRRect, strokePaint);
-        } else if (dataModuleStyle.dataModuleShape ==
-                QrDataModuleShape.random &&
-            Random().nextInt(10) < 5) {
-          Rect? _prevCircleRect;
-          // draw random Circles
-          final randomRadius = Random().nextDouble() * 0.5 + 0.3;
-          final circleRect = Rect.fromLTWH(
-            left + (pixelSize - pixelSize * randomRadius) / 2,
-            top + (pixelSize - pixelSize * randomRadius) / 2,
-            pixelSize * randomRadius,
-            pixelSize * randomRadius,
-          );
-
-          // connect circles with lines
-          final connectChance = Random().nextInt(2);
-          final isConnect = connectChance == 0;
-          if (isConnect) {
-            // connect this circle with previous circle
-            if (_prevCircleRect != null) {
-              final startPoint = Offset(
-                _prevCircleRect.center.dx + _prevCircleRect.width / 2,
-                _prevCircleRect.center.dy,
-              );
-              final endPoint = Offset(
-                circleRect.center.dx - circleRect.width / 2,
-                circleRect.center.dy,
-              );
-              canvas.drawLine(startPoint, endPoint, paint);
-            }
-            _prevCircleRect = circleRect;
-          } else {
-            _prevCircleRect = null;
-          }
-
-          canvas.drawOval(circleRect, paint);
-        } else {
+        }  else {
           final roundedRect = RRect.fromRectAndRadius(
               squareRect, Radius.circular(pixelSize + pixelHTweak));
           canvas.drawRRect(roundedRect, paint);

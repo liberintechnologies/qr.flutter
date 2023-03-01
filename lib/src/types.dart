@@ -65,11 +65,6 @@ enum QrDataModuleShape {
 
   ///use diamond dots
   diamond,
-
-  ///use bubbles dots
-  bubbles,
-  ///random
-  random,
 }
 
 /// Styling options for finder pattern eye.
